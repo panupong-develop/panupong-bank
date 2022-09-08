@@ -1,0 +1,15 @@
+version: '3.10'
+
+services:
+  app:
+    container_name: django-app
+    build:
+      context: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src:/app
+    env_file:
+      - ./.env
+    restart: always
