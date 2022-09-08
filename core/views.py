@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import HttpResponse, render
 from django.template import loader
 from ipware import get_client_ip
+from loguru import logger
 
 from .models import IncomingRequest
 
@@ -36,6 +37,13 @@ def landing(request):
     ipinfo_data = ipinfo_get_client_ip(request)
     ipware_data = ipware_get_client_ip(request)
 
+    logger.info(
+        {
+            "ipinfo_data": ipinfo_data,
+            "ipware_data": ipware_data,
+        }
+    )
+
     IncomingRequest.objects.create(
         ipware=ipware_data,
         ipinfo=ipinfo_data,
@@ -65,5 +73,15 @@ def collect_loc(request, text):
         latitude=lat,
         longitude=long,
     )
+
+    logger.info(
+        {
+            "ipinfo_data": ipinfo_data,
+            "ipware_data": ipware_data,
+            "latitude": lat,
+            "longitude": long,
+        }
+    )
+
     response = "405 Not found."
     return HttpResponse(response)
